@@ -4,12 +4,12 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useAuth } from '@/context/AuthProvider' // ✅ Import AuthProvider
 import { toast } from 'sonner'
 
 export default function AuthForm({ isLogin = true }) {
-  const router = useRouter()
-  const form = useForm()
+  const { login } = useAuth() // ✅ Use login function from AuthProvider
+  const form = useForm({ defaultValues: { email: '', password: '' } })
 
   const onSubmit = async (values) => {
     try {
@@ -20,13 +20,13 @@ export default function AuthForm({ isLogin = true }) {
       })
       
       if (!res.ok) throw new Error(await res.text())
-      
+
       if (isLogin) {
-        router.push('/dashboard')
         toast.success('Login successful')
+        await login() // ✅ Call login function to update auth state
       } else {
-        router.push('/login')
         toast.success('Account created')
+        window.location.href = "/login" // ✅ Redirect after signup
       }
     } catch (error) {
       toast.error(error.message)
