@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 import { SignJWT } from "jose";
 import bcrypt from "bcryptjs";
-import db from "@/lib/db";
+import dbConnect from "@/lib/db"; // Ensure database connection
+import User from "@/models/User"; // Import the User model
 
 export async function POST(req) {
   try {
+    await dbConnect(); // Connect to the database
+
     const { email, password } = await req.json();
     
     // Input validation
@@ -15,7 +18,8 @@ export async function POST(req) {
       );
     }
 
-    const user = await db.user.findOne({ email });
+    // Find user correctly
+    const user = await User.findOne({ email });
     
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return NextResponse.json(
@@ -30,6 +34,7 @@ export async function POST(req) {
       .setExpirationTime("2h")
       .sign(new TextEncoder().encode(process.env.JWT_SECRET));
 
+    // Create response with HTTP-only cookie
     const response = NextResponse.json({ 
       user: { 
         id: user._id, 
@@ -37,7 +42,6 @@ export async function POST(req) {
       } 
     });
 
-    // Set HTTP-only cookie
     response.cookies.set("session", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

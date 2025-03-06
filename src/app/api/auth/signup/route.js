@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import db from "@/lib/db";
+import dbConnect from "@/lib/db"; // Import the database connection
+import User from "@/models/User"; // Import the User model
 
 export async function POST(req) {
   try {
+    await dbConnect(); // Ensure the database is connected
+
     const { email, password } = await req.json();
     
     // Validation
@@ -21,8 +24,9 @@ export async function POST(req) {
       );
     }
 
-    const existingUser = await db.user.findOne({ email });
-    
+    // Use the User model correctly
+    const existingUser = await User.findOne({ email });
+
     if (existingUser) {
       return NextResponse.json(
         { error: "User already exists" },
@@ -31,7 +35,8 @@ export async function POST(req) {
     }
 
     const hashedPassword = bcrypt.hashSync(password, 12);
-    const newUser = await db.user.create({ 
+
+    const newUser = await User.create({ 
       email, 
       password: hashedPassword,
       createdAt: new Date()
