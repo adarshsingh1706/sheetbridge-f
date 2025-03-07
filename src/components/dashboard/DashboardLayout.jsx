@@ -80,7 +80,20 @@ export default function DashboardLayout({ children }) {
                 <Button 
                   variant="ghost" 
                   className="w-full mt-4 justify-start gap-2"
-                  onClick={logout}
+                  onClick={async () => {
+                    try {
+                      // Clear session via API
+                      await fetch('/api/auth/logout', { method: 'POST' });
+                      
+                      // Force full page reload
+                      window.location.href = '/login';
+                      
+                      // Clear local storage
+                      localStorage.removeItem('token');
+                    } catch (error) {
+                      console.error('Logout failed:', error);
+                    }
+                  }}
                 >
                   <LogOut className="h-4 w-4" />
                   Sign Out
@@ -110,7 +123,20 @@ export default function DashboardLayout({ children }) {
                   Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer" onClick={logout}>
+                <DropdownMenuItem className="cursor-pointer" onClick={async () => {
+  try {
+    // Clear session via API
+    await fetch('/api/auth/logout', { method: 'POST' });
+    
+    // Force full page reload
+    window.location.href = '/login';
+    
+    // Clear local storage
+    localStorage.removeItem('token');
+  } catch (error) {
+    console.error('Logout failed:', error);
+  }
+}}>
                   <LogOut className="mr-2 h-4 w-4" />
                   Sign Out
                 </DropdownMenuItem>
@@ -160,7 +186,20 @@ export default function DashboardLayout({ children }) {
               <Button 
                 variant="ghost" 
                 className="w-full mt-4 justify-start gap-2"
-                onClick={logout}
+                onClick={async () => {
+                  try {
+                    // Clear session via API
+                    await fetch('/api/auth/logout', { method: 'POST' });
+                    
+                    // Force full page reload
+                    window.location.href = '/login';
+                    
+                    // Clear local storage
+                    localStorage.removeItem('token');
+                  } catch (error) {
+                    console.error('Logout failed:', error);
+                  }
+                }}
               >
                 <LogOut className="h-4 w-4" />
                 Sign Out
@@ -192,7 +231,20 @@ export default function DashboardLayout({ children }) {
                       Settings
                     </MenubarItem>
                     <Separator className="my-1" />
-                    <MenubarItem className="cursor-pointer text-destructive" onClick={logout}>
+                    <MenubarItem className="cursor-pointer text-destructive" onClick={async () => {
+  try {
+    // Clear session via API
+    await fetch('/api/auth/logout', { method: 'POST' });
+    
+    // Force full page reload
+    window.location.href = '/login';
+    
+    // Clear local storage
+    localStorage.removeItem('token');
+  } catch (error) {
+    console.error('Logout failed:', error);
+  }
+}}>
                       <LogOut className="mr-2 h-4 w-4" />
                       Sign Out
                     </MenubarItem>
