@@ -204,9 +204,15 @@ export default function DashboardLayout({ children }) {
                 <LogOut className="h-4 w-4" />
                 Sign Out
               </Button>
-              <Button onClick={() => window.location.href='/api/auth/google'}>
-                Connect Google Sheets
-              </Button>
+              <Button 
+  onClick={() => window.location.href = '/api/auth/google'}
+  className="w-full mt-2 bg-green-600 hover:bg-green-700"
+>
+  <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM19 19H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/>
+  </svg>
+  Connect Google Sheets
+</Button>
             </div>
           </div>
         </aside>
@@ -254,9 +260,15 @@ export default function DashboardLayout({ children }) {
                   </MenubarContent>
                 </MenubarMenu>
               </Menubar>
-              <Button onClick={() => window.location.href='/api/auth/google'}>
-                Connect Google Sheets
-              </Button>
+              <Button 
+  onClick={() => window.location.href = '/api/auth/google'}
+  className="w-full mt-2 bg-green-600 hover:bg-green-700"
+>
+  <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM19 19H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/>
+  </svg>
+  Connect Google Sheets
+</Button>
             </div>
           </header>
           

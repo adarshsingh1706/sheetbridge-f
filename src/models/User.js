@@ -1,39 +1,37 @@
 import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema({
-  sessionToken: String,
   email: {
     type: String,
     required: true,
     unique: true,
-    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Invalid email']
+    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Invalid email address']
   },
-  password: {
-    type: String,
-    required: true,
-    minlength: 8
+  googleTokens: {
+    access_token: String,
+    refresh_token: String,
+    expiry_date: Number
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  googleSheetId: String,
   customColumns: [{
     header: String,
     type: {
       type: String,
-      enum: ['text', 'date']
+      enum: ['text', 'date'],
+      default: 'text'
     },
-    visible: Boolean
+    visible: {
+      type: Boolean,
+      default: true
+    }
   }]
+}, { 
+  timestamps: true,
+  // Remove duplicate index definitions
+  autoIndex: false 
 })
 
-// Delete password field when returning JSON
-userSchema.set('toJSON', {
-  transform: function(doc, ret) {
-    delete ret.password
-    return ret
-  }
-})
+// Create indexes manually
+userSchema.index({ email: 1 }, { unique: true })
+userSchema.index({ 'googleTokens.expiry_date': 1 })
 
 export default mongoose.models.User || mongoose.model('User', userSchema)
