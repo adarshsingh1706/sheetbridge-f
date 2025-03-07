@@ -14,9 +14,6 @@ export async function GET(req) {
     )
     
     const { tokens } = await oauth2Client.getToken(code)
-    oauth2Client.setCredentials(tokens)
-    
-    // Get user email from ID token
     const ticket = await oauth2Client.verifyIdToken({
       idToken: tokens.id_token,
       audience: process.env.GOOGLE_CLIENT_ID
@@ -25,7 +22,6 @@ export async function GET(req) {
     const payload = ticket.getPayload()
     const email = payload.email
 
-    // Database operations
     await connectDB()
     const user = await User.findOneAndUpdate(
       { email },
@@ -33,26 +29,28 @@ export async function GET(req) {
       { upsert: true, new: true }
     )
 
-    // Create session token
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,
       { expiresIn: '2h' }
     )
 
-    // Set cookie
-    const response = NextResponse.redirect(new URL('/dashboard', req.nextUrl.origin))
-    response.cookies.set('session', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 2,
-      path: '/',
+    const response = new Response(null, {
+      status: 302,
+      headers: {
+        Location: '/dashboard'
+      }
     })
+    
+    response.headers.append(
+      'Set-Cookie', 
+      `session=${token}; Path=/; HttpOnly; ${process.env.NODE_ENV === 'production' ? 'Secure; SameSite=Strict' : ''} Max-Age=7200`
+    )
 
     return response
-    
+
   } catch (error) {
     console.error('Google Auth Error:', error)
-    return Response.redirect(new URL('/login?error=auth_failed', req.nextUrl.origin))
+    return Response.redirect(new URL(`/login?error=${encodeURIComponent(error.message)}`, req.nextUrl.origin))
   }
 }
