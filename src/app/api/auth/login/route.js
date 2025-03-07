@@ -35,19 +35,34 @@ export async function POST(req) {
       .sign(new TextEncoder().encode(process.env.JWT_SECRET));
 
     // Create response with HTTP-only cookie
+    // const response = NextResponse.json({ 
+    //   user: { 
+    //     id: user._id, 
+    //     email: user.email 
+    //   } 
+    // });
+
+    // response.cookies.set("session", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   sameSite: "strict",
+    //   maxAge: 7200, // 2 hours
+    //   path: "/",
+    // });
+
+    
     const response = NextResponse.json({ 
-      user: { 
-        id: user._id, 
-        email: user.email 
-      } 
+      success: true,
+      user: { id: user._id, email: user.email } 
     });
 
-    response.cookies.set("session", token, {
+    // Set secure HTTP-only cookie
+    response.cookies.set('session', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7200, // 2 hours
-      path: "/",
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 2, // 2 hours
+      path: '/',
     });
 
     return response;

@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Loader2 } from "lucide-react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -27,17 +26,22 @@ export default function AuthForm() {
     setIsLoading(true);
     try {
       const endpoint = isLogin ? "/api/auth/login" : "/api/auth/signup";
-      const { data } = await axios.post(endpoint, values);
-      
-      localStorage.setItem("token", data.token);
-      router.push("/dashboard");
-      
-      toast.success(isLogin ? "You've been logged in" : "Account created successfully", {
-        description: "Welcome to your dashboard!",
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values)
       });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      // Force page reload to trigger middleware check
+      window.location.href = "/dashboard";
+
     } catch (error) {
       toast.error("Authentication failed", {
-        description: error.response?.data?.message || "Please check your credentials and try again",
+        description: error.message || "Please check your credentials and try again",
       });
     } finally {
       setIsLoading(false);
