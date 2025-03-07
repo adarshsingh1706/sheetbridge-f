@@ -39,5 +39,5 @@ export async function middleware(req) {
     }
   }
 
-  return NextResponse.next(); // ✅ Default behavior if no special case applies
+  return NextResponse.next(); 
 }

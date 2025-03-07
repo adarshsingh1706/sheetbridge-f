@@ -1,14 +1,14 @@
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { 
   Menubar,
   MenubarMenu,
   MenubarTrigger,
   MenubarContent,
   MenubarItem 
-} from "@/components/ui/menubar"
+} from "@/components/ui/menubar";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -16,22 +16,22 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Separator } from "@/components/ui/separator"
-import { Badge } from "@/components/ui/badge"
-import { useAuth } from "@/context/AuthProvider"
-import { Menu, LogOut, User, Settings, LayoutDashboard, Sheet as SheetIcon } from "lucide-react"
-import Link from "next/link"
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/context/AuthProvider";
+import { Menu, LogOut, User, Settings, LayoutDashboard, Sheet as SheetIcon } from "lucide-react";
+import Link from "next/link";
 
 export default function DashboardLayout({ children }) {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuth();
   
   const navigationItems = [
     { label: "Dashboard", path: "/dashboard", icon: <LayoutDashboard className="h-4 w-4" /> },
     { label: "Sheets", path: "/dashboard/sheets", icon: <SheetIcon className="h-4 w-4" /> },
     { label: "Settings", path: "/dashboard/settings", icon: <Settings className="h-4 w-4" /> }
-  ]
+  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -124,19 +124,19 @@ export default function DashboardLayout({ children }) {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="cursor-pointer" onClick={async () => {
-  try {
-    // Clear session via API
-    await fetch('/api/auth/logout', { method: 'POST' });
-    
-    // Force full page reload
-    window.location.href = '/login';
-    
-    // Clear local storage
-    localStorage.removeItem('token');
-  } catch (error) {
-    console.error('Logout failed:', error);
-  }
-}}>
+                  try {
+                    // Clear session via API
+                    await fetch('/api/auth/logout', { method: 'POST' });
+                    
+                    // Force full page reload
+                    window.location.href = '/login';
+                    
+                    // Clear local storage
+                    localStorage.removeItem('token');
+                  } catch (error) {
+                    console.error('Logout failed:', error);
+                  }
+                }}>
                   <LogOut className="mr-2 h-4 w-4" />
                   Sign Out
                 </DropdownMenuItem>
@@ -204,6 +204,9 @@ export default function DashboardLayout({ children }) {
                 <LogOut className="h-4 w-4" />
                 Sign Out
               </Button>
+              <Button onClick={() => window.location.href='/api/auth/google'}>
+                Connect Google Sheets
+              </Button>
             </div>
           </div>
         </aside>
@@ -232,25 +235,28 @@ export default function DashboardLayout({ children }) {
                     </MenubarItem>
                     <Separator className="my-1" />
                     <MenubarItem className="cursor-pointer text-destructive" onClick={async () => {
-  try {
-    // Clear session via API
-    await fetch('/api/auth/logout', { method: 'POST' });
-    
-    // Force full page reload
-    window.location.href = '/login';
-    
-    // Clear local storage
-    localStorage.removeItem('token');
-  } catch (error) {
-    console.error('Logout failed:', error);
-  }
-}}>
+                      try {
+                        // Clear session via API
+                        await fetch('/api/auth/logout', { method: 'POST' });
+                        
+                        // Force full page reload
+                        window.location.href = '/login';
+                        
+                        // Clear local storage
+                        localStorage.removeItem('token');
+                      } catch (error) {
+                        console.error('Logout failed:', error);
+                      }
+                    }}>
                       <LogOut className="mr-2 h-4 w-4" />
                       Sign Out
                     </MenubarItem>
                   </MenubarContent>
                 </MenubarMenu>
               </Menubar>
+              <Button onClick={() => window.location.href='/api/auth/google'}>
+                Connect Google Sheets
+              </Button>
             </div>
           </header>
           
@@ -263,5 +269,5 @@ export default function DashboardLayout({ children }) {
         </main>
       </div>
     </div>
-  )
+  );
 }
